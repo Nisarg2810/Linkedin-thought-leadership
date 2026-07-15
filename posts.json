@@ -7,79 +7,14 @@
     "type": "standard",
     "featured": false
   },
-  { "type": "standard", "name": "Nisarg Mehta", "role": "CEO / Founder", "photo": "https://media.licdn.com/dms/image/v2/D4D03AQH9bo3C6tPzPg/profile-displayphoto-crop_800_800/B4DZsx8ZwSH8AI-/0/1766069478210?e=1785974400&v=beta&t=9xOZPWIHLLF56FTdTsYTcxVc-wjKN67zoher8s3OtYQ", "body": "A growing number of executives are coming to us after unsuccessful attempts to elevate their presence on LinkedIn by hiring external writers or agencies to articulate their voice. In most cases, this results not just in underperformance, but in outcomes that actively work "against their objectives".
-
-
-
-
-
-
-
-In short: their standing would have been better preserved had they opted not to publish at all.
-
-
-
-
-
-
-
-This observation may seem counterintuitive, yet it reflects a broader reality of today’s B2B communication environment.
-
-
-
-
-
-
-
-Before allocating more time, budget, or external resources to LinkedIn, it is worth grounding in a few key principles:
-
-
-
-
-
-
-
-1. We are living in an age of extreme overcommunication. Millions of pieces of content are produced each day and advances in artificial intelligence have reduced the friction required to generate an endless stream of content. In such an environment, restraint carries more value than participation that is poorly conceived (i.e., misaligned with the brand it represents). 
-
-
-
-
-
-
-
-2. The underlying problem is not just a lack of effort. More often, it is a failure to begin in the right place. Most agencies/writers approach brand communication on LinkedIn as a publishing exercise. The process begins with the wrong premise: "What should we post today?" But brand communication starts with positioning: "Where and how you stand in the mind of your prospect"
-
-
-
-
-
-
-
-At its simplest, it is the structured placement of aligned signals into a consistent frame until the market/prospect begins to associate you with a singular, high-value outcome. Positioning informs the narrative. The narrative shapes the message. Only then should individual pieces of communication take form. Reversing this sequence is the most common error and carries tangible consequences.
-
-
-
-
-
-
-
-3. None of this suggests that marketing should be rigid. The most effective marketers routinely challenge conventions and reshape expectations. However, there are principles, and there are principles in practice. The best marketers understand how things work in practice. Know the rules so they can be applied intelligently.
-
-
-
-
-
-
-
-4. Technical writing ability, while essential, is only one component of effective executive communication. At its highest level, executive communication sits at the intersection of strategy, positioning, and narrative discipline.
-
-
-
-
-
-
-
-5/ And here’s the thing… there isn’t really a fifth point. Remember the good old days of marketing when “odd numer of tips” was a rule? well good old days of marketing are gone, and it no longer requires arbitrary symmetry.", "featured": false },
+  {
+  "type": "standard",
+  "name": "Nisarg Mehta",
+  "role": "CEO / Founder",
+  "photo": "https://media.licdn.com/dms/image/v2/D4D03AQH9bo3C6tPzPg/profile-displayphoto-crop_800_800/B4DZsx8ZwSH8AI-/0/1766069478210?e=1785974400&v=beta&t=9xOZPWIHLLF56FTdTsYTcxVc-wjKN67zoher8s3OtYQ",
+  "body": "A growing number of executives are coming to us after unsuccessful attempts to elevate their presence on LinkedIn by hiring external writers or agencies to articulate their voice. In most cases, this results not just in underperformance, but in outcomes that actively work \"against their objectives\".\n\nIn short: their standing would have been better preserved had they opted not to publish at all.\n\nThis observation may seem counterintuitive, yet it reflects a broader reality of today’s B2B communication environment.\n\nBefore allocating more time, budget, or external resources to LinkedIn, it is worth grounding in a few key principles:\n\n1. We are living in an age of extreme overcommunication. Millions of pieces of content are produced each day, and advances in artificial intelligence have reduced the friction required to generate an endless stream of content. In such an environment, restraint carries more value than participation that is poorly conceived (i.e., misaligned with the brand it represents).\n\n2. The underlying problem is not just a lack of effort. More often, it is a failure to begin in the right place. Most agencies and writers approach brand communication on LinkedIn as a publishing exercise. The process begins with the wrong premise: \"What should we post today?\" But brand communication starts with positioning: \"Where and how you stand in the mind of your prospect.\"\n\nAt its simplest, it is the structured placement of aligned signals into a consistent frame until the market or prospect begins to associate you with a singular, high-value outcome. Positioning informs the narrative. The narrative shapes the message. Only then should individual pieces of communication take form. Reversing this sequence is the most common error and carries tangible consequences.\n\n3. None of this suggests that marketing should be rigid. The most effective marketers routinely challenge conventions and reshape expectations. However, there are principles, and there are principles in practice. The best marketers understand how things work in practice. Know the rules so they can be applied intelligently.\n\n4. Technical writing ability, while essential, is only one component of effective executive communication. At its highest level, executive communication sits at the intersection of strategy, positioning, and narrative discipline.\n\n5. And here’s the thing… there isn’t really a fifth point. Remember the good old days of marketing when an \"odd number of tips\" was a rule? Well, the good old days of marketing are gone, and it no longer requires arbitrary symmetry.",
+  "featured": false
+},
   {
     "name": "Amy Woods",
     "role": "CEO / Founder",
