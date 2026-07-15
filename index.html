@@ -24,15 +24,26 @@
   .hero h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; line-height: 1.15; margin: 0 0 10px; position: relative; letter-spacing: -0.01em; }
   .hero p.sub { font-size: 15px; line-height: 1.6; max-width: 620px; margin: 0 auto; color: rgba(255,255,255,0.92); position: relative; }
 
-  .post-columns { column-count: 3; column-gap: 18px; }
-  @media (max-width: 1000px) { .post-columns { column-count: 2; } }
-  @media (max-width: 640px) { .post-columns { column-count: 1; } }
+  .section-heading { font-size: 16px; font-weight: 800; margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
+
+  /* Fixed-column layout: real containers, not CSS columns, so expanding one card never reflows the rest */
+  .post-columns { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 36px; }
+  .post-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  @media (max-width: 1000px) { .post-columns[data-cols="3"] .post-col:nth-child(3) { display: none; } }
+  @media (max-width: 640px) { .post-columns[data-cols="3"] .post-col:nth-child(2),
+                              .post-columns[data-cols="3"] .post-col:nth-child(3) { display: none; } }
 
   .li-post {
     background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px;
-    margin-bottom: 18px; break-inside: avoid; display: inline-block; width: 100%;
+    margin-bottom: 18px; width: 100%;
     font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
     box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .featured-ribbon {
+    position: absolute; top: -8px; left: 14px; background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+    color: #fff; font-size: 10.5px; font-weight: 800; padding: 4px 10px; border-radius: 999px;
+    box-shadow: 0 3px 8px rgba(59,79,224,0.35);
   }
   .li-post-header { display: flex; align-items: flex-start; gap: 8px; padding: 12px 14px 0; }
   .li-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #ccc; }
@@ -59,8 +70,8 @@
 
   .quote-card {
     background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
-    border-radius: 14px; padding: 30px 24px; margin-bottom: 18px; break-inside: avoid;
-    display: inline-block; width: 100%; color: #fff; text-align: center; box-shadow: var(--shadow-lg);
+    border-radius: 14px; padding: 30px 24px; margin-bottom: 18px; width: 100%;
+    color: #fff; text-align: center; box-shadow: var(--shadow-lg); position: relative;
   }
   .quote-mark { font-size: 34px; font-weight: 800; opacity: 0.5; line-height: 1; margin-bottom: 6px; }
   .quote-text { font-size: 17px; font-weight: 700; line-height: 1.45; font-style: italic; }
@@ -74,35 +85,24 @@
   <div class="hero">
     <div class="hero-badge">✓ Writing Samples</div>
     <h1>LinkedIn Ghostwriting Portfolio</h1>
-    <!-- <p class="sub">A collection of real ghostwritten LinkedIn posts, shown the way they'd actually appear on the platform.</p> -->
+    <p class="sub">A collection of real ghostwritten LinkedIn posts, shown the way they'd actually appear on the platform.</p>
   </div>
 
-  <div class="post-columns" id="postColumns">
-    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);" id="loadingMsg">Loading posts…</div>
+  <div id="featuredSection" style="display:none;">
+    <div class="section-heading">⭐ Featured</div>
+    <div class="post-columns" id="featuredColumns" data-cols="3"></div>
+  </div>
+
+  <div class="section-heading">All Posts</div>
+  <div class="post-columns" id="postColumns" data-cols="3">
+    <div style="text-align:center;padding:40px;color:var(--muted);">Loading posts…</div>
   </div>
 
   <div class="footnote">Some entries may be practice work without an active client engagement or contract.</div>
 </div>
 
-
 <script>
 let POSTS = [];
-
-async function loadPosts() {
-  try {
-    const res = await fetch('./posts.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    POSTS = await res.json();
-    renderAll();
-  } catch (err) {
-    document.getElementById('postColumns').innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);max-width:480px;margin:0 auto;">
-        Couldn't load posts.json. Make sure it's sitting in the same folder as this page, and that this page is being served over http/https (like GitHub Pages), not opened directly as a local file.
-        <br><br><span style="font-size:11px;opacity:0.7;">${escapeHtml(err.message)}</span>
-      </div>
-    `;
-  }
-}
 
 function escapeHtml(str) {
   const d = document.createElement('div');
@@ -122,6 +122,16 @@ function colorFor(name) {
 function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 const TIMESTAMPS = ['3h', '6h', '11h', '1d', '2d', '3d', '4d', '5d', '1w', '2w', '3w'];
 
+function renderQuote(post) {
+  return `
+    <div class="quote-card">
+      ${post.featured ? '<div class="featured-ribbon">⭐ Featured</div>' : ''}
+      <div class="quote-mark">"</div>
+      <div class="quote-text">${escapeHtml(post.body)}</div>
+    </div>
+  `;
+}
+
 function renderPost(post) {
   const color = colorFor(post.name);
   const avatarHtml = post.photo
@@ -136,6 +146,7 @@ function renderPost(post) {
 
   return `
     <div class="li-post">
+      ${post.featured ? '<div class="featured-ribbon">⭐ Featured</div>' : ''}
       <div class="li-post-header">
         ${avatarHtml}
         <div class="li-headtext">
@@ -191,19 +202,24 @@ function declusterBySameName(arr) {
   return a;
 }
 
-function renderQuote(post) {
-  return `
-    <div class="quote-card">
-      <div class="quote-mark">"</div>
-      <div class="quote-text">${escapeHtml(post.body)}</div>
-    </div>
-  `;
-}
+// KEY FIX: distribute posts into real, independent column containers
+// instead of CSS column-count, so expanding one card never reflows others.
+function renderIntoColumns(containerId, posts, numCols) {
+  const container = document.getElementById(containerId);
+  container.setAttribute('data-cols', numCols);
+  const cols = [];
+  for (let i = 0; i < numCols; i++) {
+    const col = document.createElement('div');
+    col.className = 'post-col';
+    cols.push(col);
+  }
+  posts.forEach((post, i) => {
+    const html = post.type === 'quote' ? renderQuote(post) : renderPost(post);
+    cols[i % numCols].insertAdjacentHTML('beforeend', html);
+  });
+  container.innerHTML = '';
+  cols.forEach(c => container.appendChild(c));
 
-function renderAll() {
-  const container = document.getElementById('postColumns');
-  const mixed = declusterBySameName(shuffle(POSTS));
-  container.innerHTML = mixed.map(p => p.type === 'quote' ? renderQuote(p) : renderPost(p)).join('');
   container.querySelectorAll('.li-seemore').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = document.getElementById(btn.dataset.target);
@@ -211,6 +227,55 @@ function renderAll() {
       btn.textContent = target.classList.contains('truncated') ? '…see more' : 'see less';
     });
   });
+}
+
+function getColumnCount() {
+  const w = window.innerWidth;
+  if (w <= 640) return 1;
+  if (w <= 1000) return 2;
+  return 3;
+}
+
+function renderAll() {
+  const numCols = getColumnCount();
+
+  const featured = POSTS.filter(p => p.featured).slice(0, 5);
+  const rest = POSTS.filter(p => !p.featured);
+
+  if (featured.length > 0) {
+    document.getElementById('featuredSection').style.display = 'block';
+    renderIntoColumns('featuredColumns', featured, Math.min(numCols, featured.length) || 1);
+  } else {
+    document.getElementById('featuredSection').style.display = 'none';
+  }
+
+  const mixed = declusterBySameName(shuffle(rest));
+  renderIntoColumns('postColumns', mixed, numCols);
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const newCols = getColumnCount();
+    if (newCols !== parseInt(document.getElementById('postColumns').dataset.cols)) renderAll();
+  }, 250);
+});
+
+async function loadPosts() {
+  try {
+    const res = await fetch('./posts.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    POSTS = await res.json();
+    renderAll();
+  } catch (err) {
+    document.getElementById('postColumns').innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--muted);max-width:480px;margin:0 auto;">
+        Couldn't load posts.json. Make sure it's sitting in the same folder as this page, and that this page is being served over http/https (like GitHub Pages), not opened directly as a local file.
+        <br><br><span style="font-size:11px;opacity:0.7;">${escapeHtml(err.message)}</span>
+      </div>
+    `;
+  }
 }
 
 loadPosts();
