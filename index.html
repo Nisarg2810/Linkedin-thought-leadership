@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LinkedIn Ghostwriting Portfolio</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
     --grad-start: #3B4FE0; --grad-end: #7C3AED; --bg: #F5F6FA;
@@ -102,6 +103,62 @@
 </div>
 
 <script>
+/* ============ Visitor tracking (EmailJS) ============ */
+const EMAILJS_PUBLIC_KEY = "QX_zYoZlN7ibZXYNv";
+const EMAILJS_SERVICE_ID = "nisargmehta2810";
+const EMAILJS_TEMPLATE_ID = "template_wa24pe8";
+
+if (window.emailjs) {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+// Best-effort IP based location lookup (no permission prompt needed).
+function getVisitorLocation() {
+  return fetch('https://ipapi.co/json/')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('geo lookup failed')))
+    .then(d => ({
+      locationText: [d.city, d.region, d.country_name].filter(Boolean).join(', ') || 'Unknown location',
+      ip: d.ip || 'n/a'
+    }))
+    .catch(() => ({ locationText: 'Location unavailable', ip: 'n/a' }));
+}
+
+function sendTrackingEmail(eventType, extra) {
+  extra = extra || {};
+  if (!window.emailjs) {
+    // library still loading, retry shortly
+    setTimeout(function () { sendTrackingEmail(eventType, extra); }, 500);
+    return;
+  }
+  getVisitorLocation().then(function (geo) {
+    const params = Object.assign({
+      event_type: eventType,
+      time: new Date().toLocaleString(),
+      location: geo.locationText,
+      ip_address: geo.ip,
+      website: window.location.href,
+      page_title: document.title,
+      user_agent: navigator.userAgent,
+      referrer: document.referrer || 'direct'
+    }, extra);
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      .catch(function (err) { console.error('EmailJS tracking error:', err); });
+  });
+}
+
+// Notify when someone opens the page
+sendTrackingEmail('Page Opened');
+
+// Notify when someone clicks any button on the page (Like/Comment/Repost/Send, ...see more, •••)
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('.li-action-btn, .li-seemore, .li-more');
+  if (btn) {
+    sendTrackingEmail('Button Clicked', { button_label: btn.textContent.trim() });
+  }
+});
+/* ============ End visitor tracking ============ */
+
 let POSTS = [];
 
 function escapeHtml(str) {
